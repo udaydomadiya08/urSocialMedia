@@ -30,3 +30,4 @@ apps/*/data/*.db
 # User media uploads (directory structure retained via .gitkeep)
 apps/*/uploads/*
 !apps/*/uploads/.gitkeep
+

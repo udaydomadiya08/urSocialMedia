@@ -26,3 +26,4 @@ EXPOSE 4173 4174 4175 4176 4177
 ENV NODE_ENV=production
 
 CMD ["node", "ecosystem.js"]
+
