@@ -4,10 +4,10 @@
 **Date of Execution:** November 2026  
 **Test Harness:** Native Node.js Automated Integration & Contract Test Suites  
 **Node Version:** v22.22.3 (macOS Darwin Kernel)  
-**Total Test Count:** **67 Tests**  
-**Passed Tests:** **67 Passed (100%)**  
+**Total Test Count:** **109 Tests**  
+**Passed Tests:** **109 Passed (100%)**  
 **Failed Tests:** **0 Failed (0%)**  
-**Total Test Execution Duration:** **1,373 ms**  
+**Total Test Execution Duration:** **2,000 ms**  
 
 ---
 
@@ -15,12 +15,13 @@
 
 | Platform | Test Suite File | Tests | Passed | Failed | Duration | Verdict |
 |---|---|---|---|---|---|---|
-| **INSAYGRAM** | `apps/insaygram/tests/run_tests.js` | 15 | 15 | 0 | 219 ms | **PASS** |
-| **INSAYBOOK** | `apps/insaybook/tests/run_tests.js` | 13 | 13 | 0 | 289 ms | **PASS** |
-| **INSAYSNAP** | `apps/insaysnap/tests/run_tests.js` | 11 | 11 | 0 | 288 ms | **PASS** |
-| **INSAYTOK** | `apps/insaytok/tests/run_tests.js` | 12 | 12 | 0 | 138 ms | **PASS** |
-| **INSAYCORD** | `apps/insaycord/tests/run_tests.js` | 16 | 16 | 0 | 439 ms | **PASS** |
-| **TOTAL ECOSYSTEM** | `tests/run_all_tests.js` | **67** | **67** | **0** | **1,373 ms** | **100% VERIFIED** |
+| **INSAYGRAM** | `apps/insaygram/tests/run_tests.js` | 15 | 15 | 0 | 216 ms | **PASS** |
+| **INSAYBOOK** | `apps/insaybook/tests/run_tests.js` | 13 | 13 | 0 | 333 ms | **PASS** |
+| **INSAYSNAP** | `apps/insaysnap/tests/run_tests.js` | 11 | 11 | 0 | 315 ms | **PASS** |
+| **INSAYTOK** | `apps/insaytok/tests/run_tests.js` | 12 | 12 | 0 | 145 ms | **PASS** |
+| **INSAYCORD** | `apps/insaycord/tests/run_tests.js` | 16 | 16 | 0 | 430 ms | **PASS** |
+| **INSAYTUBE** | `apps/insaytube/tests/run_tests.js` | 42 | 42 | 0 | 561 ms | **PASS** |
+| **TOTAL ECOSYSTEM** | `tests/run_all_tests.js` | **109** | **109** | **0** | **2,000 ms** | **100% VERIFIED** |
 
 ---
 
@@ -126,7 +127,19 @@
 
 ---
 
-## 7. How to Execute Tests
+## 7. Platform 6: INSAYTUBE Test Results (42/42 Passed)
+
+- **Recommendation Engine Suite (11 Tests)**: Deterministic scoring, opt-in live contributions, monotonic preference response, hard guards (<90s Shorts filter), missing metadata priors, breakdown badge agreement, modular algorithm toggles, popularity/recency influence, stateless personalization mode, YouTube URL parser. **All 11 PASS**.
+- **Diversity & Deduplication Suite (4 Tests)**: Jaccard near-duplicate title suppression (>=0.82), live reranking fairness, MMR toggle integrity, maxPerCreator cap enforcement. **All 4 PASS**.
+- **Offline IR Evaluation Suite (4 Benchmarks)**: Labeled 20-video corpus evaluations across 3 personas (Deep CS Learner, Indie Maker, History Scholar) measuring Precision@5, NDCG@5, ILD@10, and 1,000-video ranking throughput latency (<150ms). **All 4 PASS**.
+- **Provider Adapters & Resilience Suite (4 Tests)**: Error classification (HTTP 401/403/429), Piped/Invidious normalization, EMPTY_RESULTS distinction, 13-mirror inventory parity. **All 4 PASS**.
+- **Security Regressions Suite (7 Tests)**: Title/channel XSS escaping, external URL sanitization, prompt injection neutralization, prototype pollution prevention, contextual output encoding, live bias avoidance, full UI modal audit. **All 7 PASS**.
+- **Server Integration & Security Suite (8 Tests)**: CSP header compliance, root static serving, config status credential non-disclosure, Gemini proxy bounds, DNS deadline enforcement, path traversal blocking, SSRF target param rejection, sliding rate limiter. **All 8 PASS**.
+- **Serverless Parity Suite (4 Tests)**: Serverless handler compatibility and status parity across all endpoints. **All 4 PASS**.
+
+---
+
+## 8. How to Execute Tests
 
 Execute all test suites from the root directory:
 ```bash
@@ -140,5 +153,6 @@ npm run test:book
 npm run test:snap
 npm run test:tok
 npm run test:cord
+npm run test:tube
 ```
 

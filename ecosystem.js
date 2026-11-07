@@ -48,6 +48,14 @@ const PLATFORMS = [
     dir: path.join(__dirname, 'apps', 'insaycord'),
     entry: path.join(__dirname, 'apps', 'insaycord', 'server.js'),
     desc: 'Real-Time Communities, Text Channels & WebRTC Voice Rooms'
+  },
+  {
+    name: 'INSAYTUBE',
+    port: 4178,
+    color: '\x1b[31m', // Red
+    dir: path.join(__dirname, 'apps', 'insaytube'),
+    entry: path.join(__dirname, 'apps', 'insaytube', 'server.js'),
+    desc: 'Long-Form Video, Multi-Algorithm Equalizer & Topic Presets'
   }
 ];
 
@@ -57,7 +65,7 @@ const BOLD = '\x1b[1m';
 console.log(`${BOLD}========================================================================${RESET}`);
 console.log(`${BOLD}           INSAY SOCIAL NETWORK ECOSYSTEM ORCHESTRATOR                  ${RESET}`);
 console.log(`${BOLD}========================================================================${RESET}`);
-console.log(`Starting 5 independent production platforms concurrently...\n`);
+console.log(`Starting 6 independent production platforms concurrently...\n`);
 
 const processes = [];
 
@@ -95,7 +103,7 @@ PLATFORMS.forEach(platform => {
   processes.push(child);
 });
 
-console.log(`\n${BOLD}All platforms initialized and listening on ports 4173-4177.${RESET}`);
+console.log(`\n${BOLD}All platforms initialized and listening on ports 4173-4178.${RESET}`);
 console.log(`Press Ctrl+C to terminate all platform processes.\n`);
 
 function shutdown() {

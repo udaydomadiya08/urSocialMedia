@@ -19,7 +19,7 @@
 
 ## 2. Fast Local Deployment
 
-To run all five platforms simultaneously on localhost:
+To run all six platforms simultaneously on localhost:
 
 ```bash
 # 1. Enter repository
@@ -36,6 +36,7 @@ The supervisor binds to the following local endpoints:
 - **INSAYSNAP**: `http://127.0.0.1:4175`
 - **INSAYTOK**: `http://127.0.0.1:4176`
 - **INSAYCORD**: `http://127.0.0.1:4177`
+- **INSAYTUBE**: `http://127.0.0.1:4178`
 
 To run any platform as an independent standalone service:
 ```bash
@@ -79,7 +80,7 @@ COPY ecosystem.js ./
 # Create data and uploads directories for persistence
 RUN mkdir -p /app/data /app/uploads
 
-EXPOSE 4173 4174 4175 4176 4177
+EXPOSE 4173 4174 4175 4176 4177 4178
 
 CMD ["node", "ecosystem.js"]
 ```
@@ -100,6 +101,7 @@ services:
       - "4175:4175" # Insaysnap
       - "4176:4176" # Insaytok
       - "4177:4177" # Insaycord
+      - "4178:4178" # Insaytube
     volumes:
       - insaygram-data:/app/apps/insaygram/data
       - insaygram-uploads:/app/apps/insaygram/uploads
@@ -111,6 +113,8 @@ services:
       - insaytok-uploads:/app/apps/insaytok/uploads
       - insaycord-data:/app/apps/insaycord/data
       - insaycord-uploads:/app/apps/insaycord/uploads
+      - insaytube-data:/app/apps/insaytube/data
+      - insaytube-uploads:/app/apps/insaytube/uploads
     environment:
       - NODE_ENV=production
 

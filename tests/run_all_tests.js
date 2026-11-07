@@ -2,7 +2,7 @@
 
 /**
  * INSAY Social Platforms Suite — Master Verification Runner
- * Runs the test suites for all 5 platforms sequentially and produces a unified report.
+ * Runs the test suites for all 6 platforms sequentially and produces a unified report.
  */
 
 const { spawn } = require('child_process');
@@ -13,7 +13,8 @@ const SUITES = [
   { name: 'INSAYBOOK', dir: path.join(__dirname, '..', 'apps', 'insaybook'), script: 'tests/run_tests.js' },
   { name: 'INSAYSNAP', dir: path.join(__dirname, '..', 'apps', 'insaysnap'), script: 'tests/run_tests.js' },
   { name: 'INSAYTOK', dir: path.join(__dirname, '..', 'apps', 'insaytok'), script: 'tests/run_tests.js' },
-  { name: 'INSAYCORD', dir: path.join(__dirname, '..', 'apps', 'insaycord'), script: 'tests/run_tests.js' }
+  { name: 'INSAYCORD', dir: path.join(__dirname, '..', 'apps', 'insaycord'), script: 'tests/run_tests.js' },
+  { name: 'INSAYTUBE', dir: path.join(__dirname, '..', 'apps', 'insaytube'), script: 'tests/run_tests.js' }
 ];
 
 async function runSuite(suite) {

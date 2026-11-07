@@ -64,11 +64,20 @@ graph TD
         S5 --> SIG
     end
 
+    subgraph Port 4178 [INSAYTUBE - Long-Form Video]
+        S6[Node.js HTTP Server]
+        EQUAL[Multi-Algorithm Equalizer]
+        PROXY[SSRF YouTube Proxy]
+        S6 --> EQUAL
+        S6 --> PROXY
+    end
+
     User -->|HTTP / WS| S1
     User -->|HTTP| S2
     User -->|HTTP| S3
     User -->|HTTP| S4
     User -->|HTTP / WS / WebRTC| S5
+    User -->|HTTP| S6
 ```
 
 ---

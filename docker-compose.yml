@@ -11,6 +11,7 @@ services:
       - "4175:4175" # INSAYSNAP
       - "4176:4176" # INSAYTOK
       - "4177:4177" # INSAYCORD
+      - "4178:4178" # INSAYTUBE
     volumes:
       # Persistent SQLite databases & user uploads
       - insaygram-data:/app/apps/insaygram/data
@@ -23,6 +24,8 @@ services:
       - insaytok-uploads:/app/apps/insaytok/uploads
       - insaycord-data:/app/apps/insaycord/data
       - insaycord-uploads:/app/apps/insaycord/uploads
+      - insaytube-data:/app/apps/insaytube/data
+      - insaytube-uploads:/app/apps/insaytube/uploads
     environment:
       - NODE_ENV=production
 
@@ -37,4 +40,5 @@ volumes:
   insaytok-uploads:
   insaycord-data:
   insaycord-uploads:
-
+  insaytube-data:
+  insaytube-uploads:

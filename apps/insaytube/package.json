@@ -1,0 +1,27 @@
+{
+  "name": "insaytube",
+  "version": "1.0.0",
+  "private": true,
+  "description": "INSAYTUBE — Open-source, user-controlled long-form video recommendation & discovery platform with modular multi-algorithm ranking.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node tests/run_tests.js"
+  },
+  "keywords": [
+    "insaytube",
+    "youtube",
+    "recommendation-system",
+    "information-retrieval",
+    "algorithmic-transparency",
+    "mmr-diversity",
+    "open-algorithm",
+    "digital-wellbeing"
+  ],
+  "author": "INSAY Engineering Architecture Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
