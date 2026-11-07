@@ -1,0 +1,31 @@
+name: INSAY Ecosystem CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Run Master QA Test Suite
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 22.x ]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Run All 5 Platform QA Suites (67 Tests)
+        run: npm test
+
+      - name: Test Docker Container Build
+        run: docker build -t insay-suite:test .
