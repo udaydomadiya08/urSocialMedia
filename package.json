@@ -1,0 +1,33 @@
+{
+  "name": "insay-social-platforms-suite",
+  "version": "1.0.0",
+  "description": "INSAY Social Platforms Suite — Five independent, production-grade social networks with zero external npm dependencies.",
+  "main": "ecosystem.js",
+  "scripts": {
+    "start": "node ecosystem.js",
+    "test": "node tests/run_all_tests.js",
+    "test:gram": "cd apps/insaygram && npm test",
+    "test:book": "cd apps/insaybook && npm test",
+    "test:snap": "cd apps/insaysnap && npm test",
+    "test:tok": "cd apps/insaytok && npm test",
+    "test:cord": "cd apps/insaycord && npm test"
+  },
+  "keywords": [
+    "social-network",
+    "zero-dependency",
+    "insaygram",
+    "insaybook",
+    "insaysnap",
+    "insaytok",
+    "insaycord",
+    "sqlite",
+    "websockets",
+    "webrtc"
+  ],
+  "author": "INSAY Engineering Architecture Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  }
+}
+

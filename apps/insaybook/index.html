@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="description" content="insaybook — Your people. Your communities. Your space.">
+  <title>insaybook — Community Social Platform</title>
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Left Navigation Sidebar -->
+    <aside class="sidebar">
+      <a class="brand" href="#feed" id="brandLogo">
+        <div class="brand-mark">b</div>
+        <span>insaybook</span>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <button class="nav-btn active" data-view="feed"><span class="nav-icon">📰</span><span>News Feed</span></button>
+        <button class="nav-btn" data-view="friends"><span class="nav-icon">👥</span><span>Friends</span><span class="badge" id="pendingFriendsBadge" style="display:none">0</span></button>
+        <button class="nav-btn" data-view="groups"><span class="nav-icon">🏛️</span><span>Groups</span></button>
+        <button class="nav-btn" data-view="events"><span class="nav-icon">📅</span><span>Events</span></button>
+        <button class="nav-btn" data-view="marketplace"><span class="nav-icon">🛍️</span><span>Marketplace</span></button>
+        <button class="nav-btn" data-view="messenger"><span class="nav-icon">💬</span><span>Messenger</span></button>
+        <button class="nav-btn" data-view="profile"><span class="nav-icon">👤</span><span>Profile</span></button>
+      </nav>
+
+      <div class="sidebar-user" id="sidebarUser">
+        <img class="user-avatar-sm" id="sidebarAvatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='38' height='38'><circle cx='19' cy='19' r='19' fill='%23444'/></svg>" alt="">
+        <div style="flex:1;min-width:0">
+          <b id="sidebarUsername" style="font-size:13px;display:block;overflow:hidden;text-overflow:ellipsis">Guest</b>
+          <small id="sidebarRole" style="color:var(--muted)">Community</small>
+        </div>
+        <button id="authBtn" class="btn-outline" style="padding:4px 8px;font-size:11px">Sign In</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-stage">
+      <header class="topbar">
+        <div class="search-bar">
+          <span>🔍</span>
+          <input type="text" id="globalSearch" placeholder="Search people, communities, events, marketplace...">
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-primary" id="openComposerBtn">✏️ What's on your mind?</button>
+        </div>
+      </header>
+
+      <!-- VIEW 1: NEWS FEED -->
+      <section id="viewFeed">
+        <div class="feed-layout">
+          <div class="feed-stream">
+            <!-- Composer Card -->
+            <div class="feed-composer">
+              <div class="composer-top">
+                <img class="user-avatar-sm" id="composerAvatar" src="" alt="">
+                <button class="composer-input-btn" id="composerTrigger">Share an update with your people...</button>
+              </div>
+              <div class="composer-actions">
+                <button class="composer-tool-btn" id="toolPhoto">📷 Photo / Media</button>
+                <button class="composer-tool-btn" id="toolGroup">👥 In Group</button>
+              </div>
+            </div>
+
+            <!-- Feed Posts Stream -->
+            <div id="postsStream">
+              <div style="text-align:center;padding:40px;color:var(--muted)">Loading community timeline...</div>
+            </div>
+          </div>
+
+          <!-- Right Rail -->
+          <aside class="right-rail">
+            <div class="rail-widget">
+              <div class="widget-title">
+                <span>Friend Requests</span>
+                <span id="requestsCount" style="color:var(--accent-cyan)">0</span>
+              </div>
+              <div id="requestsWidget"></div>
+            </div>
+
+            <div class="rail-widget">
+              <div class="widget-title">Upcoming Community Events</div>
+              <div id="upcomingEventsWidget"></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- VIEW 2: FRIENDS HUB -->
+      <section id="viewFriends" style="display:none">
+        <h2 style="font:800 24px 'Plus Jakarta Sans';margin-bottom:18px">Friends & Connections</h2>
+        <div style="margin-bottom:24px">
+          <h3 style="font:700 16px 'Plus Jakarta Sans';margin-bottom:12px">Pending Requests</h3>
+          <div class="community-grid" id="pendingFriendsGrid"></div>
+        </div>
+        <div>
+          <h3 style="font:700 16px 'Plus Jakarta Sans';margin-bottom:12px">Your Friends</h3>
+          <div class="community-grid" id="friendsGrid"></div>
+        </div>
+      </section>
+
+      <!-- VIEW 3: GROUPS HUB -->
+      <section id="viewGroups" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+          <h2 style="font:800 24px 'Plus Jakarta Sans'">Community Groups</h2>
+          <button class="btn-primary" id="createGroupBtn">＋ Create Group</button>
+        </div>
+        <div class="community-grid" id="groupsGrid"></div>
+      </section>
+
+      <!-- VIEW 4: EVENTS HUB -->
+      <section id="viewEvents" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+          <h2 style="font:800 24px 'Plus Jakarta Sans'">Community Events</h2>
+          <button class="btn-primary" id="createEventBtn">＋ Host Event</button>
+        </div>
+        <div class="community-grid" id="eventsGrid"></div>
+      </section>
+
+      <!-- VIEW 5: MARKETPLACE -->
+      <section id="viewMarketplace" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+          <h2 style="font:800 24px 'Plus Jakarta Sans'">Community Marketplace</h2>
+          <button class="btn-primary" id="createListingBtn">＋ List an Item</button>
+        </div>
+        <div class="marketplace-grid" id="marketplaceGrid"></div>
+      </section>
+
+      <!-- VIEW 6: MESSENGER -->
+      <section id="viewMessenger" style="display:none">
+        <h2 style="font:800 24px 'Plus Jakarta Sans';margin-bottom:18px">Messenger</h2>
+        <div style="display:grid;grid-template-columns:280px 1fr;gap:20px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);height:580px;overflow:hidden">
+          <div style="border-right:1px solid var(--line);padding:14px;overflow-y:auto" id="messengerConvList"></div>
+          <div style="display:flex;flex-direction:column;height:100%" id="messengerActivePane">
+            <div style="padding:14px 20px;border-bottom:1px solid var(--line);font-weight:700" id="messengerHeader">Select a friend to message</div>
+            <div style="flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:10px" id="messengerMessages"></div>
+            <form id="messengerForm" style="display:none;padding:12px 20px;border-top:1px solid var(--line);gap:10px">
+              <input type="text" id="messengerInput" placeholder="Write a message..." class="form-input" style="flex:1" required>
+              <button type="submit" class="btn-primary">Send</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 7: PROFILE -->
+      <section id="viewProfile" style="display:none">
+        <div class="profile-cover">
+          <img class="profile-avatar-overlay" id="profileAvatar" src="" alt="">
+        </div>
+        <div style="background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px;margin-bottom:24px">
+          <div style="display:flex;justify-content:space-between;align-items:start">
+            <div>
+              <h2 style="font:800 24px 'Plus Jakarta Sans'" id="profileDisplayName"></h2>
+              <small style="color:var(--muted)" id="profileUsername"></small>
+            </div>
+            <div style="display:flex;gap:10px">
+              <button class="btn-outline" id="editProfileTrigger">Edit Profile</button>
+              <button class="btn-outline" id="logoutTrigger" style="color:#f43f5e">Log Out</button>
+            </div>
+          </div>
+          <p style="margin:14px 0;font-size:14px;color:#cbd5e1" id="profileBio"></p>
+          <div style="display:flex;gap:20px;color:var(--muted);font-size:13px">
+            <span id="profileHometown">📍 Hometown</span>
+            <span id="profileOccupation">💼 Occupation</span>
+            <span id="profileFriendCount">👥 0 Friends</span>
+          </div>
+        </div>
+        <h3 style="font:700 18px 'Plus Jakarta Sans';margin-bottom:14px">Timeline Updates</h3>
+        <div class="feed-stream" id="profileFeed"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODALS -->
+
+  <!-- Compose Post Modal -->
+  <dialog id="composeDialog">
+    <form id="composeForm">
+      <div class="dialog-header">
+        <h3>Create Post</h3>
+        <button type="button" class="btn-outline close-dialog">×</button>
+      </div>
+      <div class="form-group">
+        <label>Post to Audience</label>
+        <select id="postAudience" class="form-input">
+          <option value="public">Public</option>
+          <option value="friends">Friends Only</option>
+          <option value="private">Only Me</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Share in Group (Optional)</label>
+        <select id="postGroupSelect" class="form-input">
+          <option value="">Personal Timeline</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>What's on your mind?</label>
+        <textarea id="postContentInput" rows="4" class="form-input" placeholder="Share with your community..." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Add Photo / Image</label>
+        <input type="file" id="postMediaFile" accept="image/*,video/*" class="form-input">
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+        <button type="button" class="btn-outline close-dialog">Cancel</button>
+        <button type="submit" class="btn-primary" id="submitPostBtn">Post</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Create Group Modal -->
+  <dialog id="createGroupDialog">
+    <form id="createGroupForm">
+      <div class="dialog-header">
+        <h3>Create Community Group</h3>
+        <button type="button" class="btn-outline close-dialog">×</button>
+      </div>
+      <div class="form-group">
+        <label>Group Name</label>
+        <input type="text" id="groupNameInput" class="form-input" required placeholder="e.g. Urban Gardeners">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="groupDescInput" rows="3" class="form-input" placeholder="What is this community about?"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Privacy</label>
+        <select id="groupPrivacyInput" class="form-input">
+          <option value="public">Public (Anyone can see and join)</option>
+          <option value="private">Private (Only members can see posts)</option>
+        </select>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+        <button type="button" class="btn-outline close-dialog">Cancel</button>
+        <button type="submit" class="btn-primary">Create Group</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Create Event Modal -->
+  <dialog id="createEventDialog">
+    <form id="createEventForm">
+      <div class="dialog-header">
+        <h3>Host a Community Event</h3>
+        <button type="button" class="btn-outline close-dialog">×</button>
+      </div>
+      <div class="form-group">
+        <label>Event Title</label>
+        <input type="text" id="eventTitleInput" class="form-input" required placeholder="e.g. Saturday Trail Hike">
+      </div>
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="eventLocationInput" class="form-input" required placeholder="e.g. Ranger Station Trailhead">
+      </div>
+      <div class="form-group">
+        <label>Date & Time</label>
+        <input type="datetime-local" id="eventDateInput" class="form-input" required>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="eventDescInput" rows="3" class="form-input" placeholder="Details, packing list, instructions..."></textarea>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+        <button type="button" class="btn-outline close-dialog">Cancel</button>
+        <button type="submit" class="btn-primary">Publish Event</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Create Marketplace Item Modal -->
+  <dialog id="createItemDialog">
+    <form id="createItemForm">
+      <div class="dialog-header">
+        <h3>List Item for Sale</h3>
+        <button type="button" class="btn-outline close-dialog">×</button>
+      </div>
+      <div class="form-group">
+        <label>Item Title</label>
+        <input type="text" id="itemTitleInput" class="form-input" required placeholder="e.g. Handcrafted Oak Coffee Table">
+      </div>
+      <div class="form-group">
+        <label>Price ($ USD)</label>
+        <input type="number" step="0.01" id="itemPriceInput" class="form-input" required placeholder="45.00">
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="itemCategoryInput" class="form-input">
+          <option value="Furniture">Furniture</option>
+          <option value="Garden">Garden & Outdoor</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Crafts">Handmade Crafts</option>
+          <option value="Books">Books & Media</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Location / Pickup Area</label>
+        <input type="text" id="itemLocationInput" class="form-input" required placeholder="e.g. Downtown / Elm St">
+      </div>
+      <div class="form-group">
+        <label>Photo</label>
+        <input type="file" id="itemPhotoFile" accept="image/*" class="form-input">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="itemDescInput" rows="3" class="form-input" placeholder="Condition, dimensions, details..."></textarea>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+        <button type="button" class="btn-outline close-dialog">Cancel</button>
+        <button type="submit" class="btn-primary">List Item</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Auth Dialog -->
+  <dialog id="authDialog">
+    <div class="dialog-header">
+      <h3 id="authTitle">Sign In to insaybook</h3>
+      <button type="button" class="btn-outline close-dialog">×</button>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:18px">
+      <button type="button" class="btn-outline" id="tabLogin" style="flex:1;background:var(--panel2)">Login</button>
+      <button type="button" class="btn-outline" id="tabRegister" style="flex:1">Register</button>
+    </div>
+    <form id="authForm">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="authUsername" class="form-input" required placeholder="e.g. ashapatel">
+      </div>
+      <div class="form-group" id="groupEmail" style="display:none">
+        <label>Email</label>
+        <input type="email" id="authEmail" class="form-input" placeholder="asha@example.com">
+      </div>
+      <div class="form-group" id="groupDisplayName" style="display:none">
+        <label>Full Name</label>
+        <input type="text" id="authDisplayName" class="form-input" placeholder="Asha Patel">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="authPassword" class="form-input" required placeholder="••••••••">
+      </div>
+      <div id="authError" style="color:#f43f5e;font-size:12px;margin-bottom:12px;display:none"></div>
+      <button type="submit" class="btn-primary" style="width:100%;justify-content:center">Continue</button>
+    </form>
+  </dialog>
+
+  <div class="toast-msg" id="toastMsg"></div>
+
+  <script src="src/app.js"></script>
+</body>
+</html>

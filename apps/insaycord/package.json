@@ -1,0 +1,14 @@
+{
+  "name": "insaycord",
+  "version": "1.0.0",
+  "private": true,
+  "description": "insaycord — Real-time community communication, text channels, roles, and voice rooms.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/run_tests.js"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

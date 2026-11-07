@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="insaytok — Short-form video entertainment with explainable AI recommendations.">
+  <title>insaytok — Short-Form Video Platform</title>
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Left Navigation Sidebar -->
+    <aside class="sidebar">
+      <a class="brand" href="#feed" id="brandLogo">
+        <div class="brand-mark">▶</div>
+        <span>insaytok</span>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <button class="nav-btn active" data-view="feed"><span class="nav-icon">🔥</span><span>For You</span></button>
+        <button class="nav-btn" data-view="following"><span class="nav-icon">👥</span><span>Following</span></button>
+        <button class="nav-btn" data-view="discover"><span class="nav-icon">🔍</span><span>Discover</span></button>
+        <button class="nav-btn" data-view="profile"><span class="nav-icon">👤</span><span>Profile</span></button>
+      </nav>
+
+      <div class="sidebar-user" id="sidebarUser">
+        <img class="user-avatar-sm" id="sidebarAvatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='38' height='38'><circle cx='19' cy='19' r='19' fill='%2316c7c2'/></svg>" alt="">
+        <div style="flex:1;min-width:0">
+          <b id="sidebarUsername" style="font-size:13px;display:block">Guest</b>
+          <small id="sidebarRole" style="color:var(--muted)">Short Video</small>
+        </div>
+        <button id="authBtn" class="btn-upload" style="padding:4px 8px;font-size:11px">Sign In</button>
+      </div>
+    </aside>
+
+    <!-- Main Stage Viewport -->
+    <main class="main-stage">
+      <!-- Top Floating Navigation -->
+      <header class="topbar">
+        <div class="feed-tabs-bar">
+          <button class="tab-btn active" id="tabForYou">For You</button>
+          <button class="tab-btn" id="tabFollowing">Following</button>
+        </div>
+        <button class="btn-upload" id="openUploadBtn">＋ Upload</button>
+      </header>
+
+      <!-- VIEW 1: VERTICAL VIDEO FEED -->
+      <section id="viewFeed" class="vertical-feed"></section>
+
+      <!-- VIEW 2: DISCOVER SEARCH -->
+      <section id="viewDiscover" style="display:none;padding:80px 30px;overflow-y:auto;height:100%">
+        <h2 style="font:800 24px 'Plus Jakarta Sans';margin-bottom:16px">Discover Trending Content</h2>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px" id="trendingTagsStrip"></div>
+        <h3 style="font:700 18px 'Plus Jakarta Sans';margin-bottom:14px">Popular Creators</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));gap:16px" id="popularCreatorsGrid"></div>
+      </section>
+
+      <!-- VIEW 3: CREATOR PROFILE -->
+      <section id="viewProfile" style="display:none;padding:80px 30px;overflow-y:auto;height:100%">
+        <div style="display:flex;align-items:center;gap:24px;margin-bottom:24px">
+          <img id="profileAvatar" class="user-avatar-sm" style="width:84px;height:84px;border:3px solid var(--accent)" src="" alt="">
+          <div>
+            <h2 id="profileDisplayName" style="font:800 24px 'Plus Jakarta Sans'"></h2>
+            <small id="profileUsername" style="color:var(--muted);display:block;margin-bottom:10px"></small>
+            <div style="display:flex;gap:20px;font-size:14px">
+              <span><b id="profileFollowing">0</b> Following</span>
+              <span><b id="profileFollowers">0</b> Followers</span>
+            </div>
+          </div>
+        </div>
+        <h3 style="font:700 18px 'Plus Jakarta Sans';margin-bottom:14px">Published Videos</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:14px" id="profileVideosGrid"></div>
+      </section>
+
+      <!-- SLIDE-OVER COMMENTS DRAWER -->
+      <aside class="comments-sheet" id="commentsSheet">
+        <div class="comments-head">
+          <h3 id="commentsSheetTitle">Comments</h3>
+          <button id="closeCommentsBtn" style="font-size:22px;color:var(--muted)">×</button>
+        </div>
+        <div class="comments-stream" id="commentsStream"></div>
+        <form id="commentPostForm" style="padding:14px;border-top:1px solid var(--line);display:flex;gap:10px">
+          <input type="text" id="commentTextInput" class="form-input" placeholder="Add a comment..." required>
+          <button type="submit" class="btn-upload" style="padding:8px 14px">Post</button>
+        </form>
+      </aside>
+    </main>
+  </div>
+
+  <!-- MODALS -->
+
+  <!-- 1. Video Upload Studio Dialog -->
+  <dialog id="uploadDialog">
+    <form id="uploadForm">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="font:800 20px 'Plus Jakarta Sans'">Upload Short Video</h3>
+        <button type="button" class="close-dialog" style="font-size:22px;color:var(--muted)">×</button>
+      </div>
+      <div style="margin-bottom:14px">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px">Select Video File (MP4/WebM)</label>
+        <input type="file" id="videoFileInput" accept="video/mp4,video/webm" class="form-input" required>
+      </div>
+      <div style="margin-bottom:14px">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px">Caption & Hashtags</label>
+        <textarea id="videoCaptionInput" rows="3" class="form-input" placeholder="Tell viewers what your video is about #diy #science..." required></textarea>
+      </div>
+      <div style="margin-bottom:18px">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px">Audio / Sound Title</label>
+        <input type="text" id="videoSoundInput" class="form-input" placeholder="e.g. Original Sound - MyTrack">
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px">
+        <button type="button" class="btn-outline close-dialog" style="border:1px solid var(--line);padding:8px 14px;border-radius:10px">Cancel</button>
+        <button type="submit" class="btn-upload" id="submitUploadBtn">Publish Video</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 2. Explainable AI Recommendation Breakdown Modal -->
+  <dialog id="aiTransparencyModal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="font:800 18px 'Plus Jakarta Sans';color:var(--accent)">Algorithmic Recommendation Transparency</h3>
+      <button type="button" class="close-dialog" style="font-size:22px;color:var(--muted)">×</button>
+    </div>
+    <p style="font-size:13px;color:#cbd5e1;line-height:1.6;margin-bottom:14px">
+      Insaytok uses an explainable multi-factor scoring model adapted from the urYouTube open-source information retrieval architecture:
+    </p>
+    <div id="aiBreakdownDetails" style="background:var(--panel2);padding:14px;border-radius:12px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.8;margin-bottom:16px"></div>
+    <div style="display:flex;justify-content:flex-end">
+      <button type="button" class="btn-upload close-dialog" style="padding:6px 14px">Understood</button>
+    </div>
+  </dialog>
+
+  <!-- 3. Auth Dialog -->
+  <dialog id="authDialog">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 id="authTitle" style="font:800 20px 'Plus Jakarta Sans'">Sign In to insaytok</h3>
+      <button type="button" class="close-dialog" style="font-size:22px;color:var(--muted)">×</button>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:18px">
+      <button type="button" id="tabLogin" class="btn-outline" style="flex:1;background:var(--panel2)">Login</button>
+      <button type="button" id="tabRegister" class="btn-outline" style="flex:1">Register</button>
+    </div>
+    <form id="authForm">
+      <div style="margin-bottom:12px">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Username</label>
+        <input type="text" id="authUsername" class="form-input" required placeholder="buildwithlee">
+      </div>
+      <div style="margin-bottom:12px;display:none" id="groupEmail">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Email</label>
+        <input type="email" id="authEmail" class="form-input" placeholder="lee@example.com">
+      </div>
+      <div style="margin-bottom:12px;display:none" id="groupDisplayName">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Display Name</label>
+        <input type="text" id="authDisplayName" class="form-input" placeholder="Lee Chen">
+      </div>
+      <div style="margin-bottom:14px">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Password</label>
+        <input type="password" id="authPassword" class="form-input" required placeholder="••••••••">
+      </div>
+      <div id="authError" style="color:var(--accent-pink);font-size:12px;margin-bottom:12px;display:none"></div>
+      <button type="submit" class="btn-upload" style="width:100%;justify-content:center">Continue</button>
+    </form>
+  </dialog>
+
+  <div class="toast-msg" id="toastMsg"></div>
+
+  <script src="src/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "insaysnap",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Camera-first ephemeral communication platform with true server-side expiration, disappearing snaps, 24h stories, memories vault, and streaks.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/run_tests.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

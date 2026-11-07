@@ -1,0 +1,14 @@
+{
+  "name": "insaybook",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Community social networking platform with groups, events, marketplace, friend graph, and messenger.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/run_tests.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

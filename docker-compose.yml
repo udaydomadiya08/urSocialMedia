@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  insay-suite:
+    build: .
+    container_name: insay-social-suite
+    restart: always
+    ports:
+      - "4173:4173" # INSAYGRAM
+      - "4174:4174" # INSAYBOOK
+      - "4175:4175" # INSAYSNAP
+      - "4176:4176" # INSAYTOK
+      - "4177:4177" # INSAYCORD
+    volumes:
+      # Persistent SQLite databases & user uploads
+      - insaygram-data:/app/apps/insaygram/data
+      - insaygram-uploads:/app/apps/insaygram/uploads
+      - insaybook-data:/app/apps/insaybook/data
+      - insaybook-uploads:/app/apps/insaybook/uploads
+      - insaysnap-data:/app/apps/insaysnap/data
+      - insaysnap-uploads:/app/apps/insaysnap/uploads
+      - insaytok-data:/app/apps/insaytok/data
+      - insaytok-uploads:/app/apps/insaytok/uploads
+      - insaycord-data:/app/apps/insaycord/data
+      - insaycord-uploads:/app/apps/insaycord/uploads
+    environment:
+      - NODE_ENV=production
+
+volumes:
+  insaygram-data:
+  insaygram-uploads:
+  insaybook-data:
+  insaybook-uploads:
+  insaysnap-data:
+  insaysnap-uploads:
+  insaytok-data:
+  insaytok-uploads:
+  insaycord-data:
+  insaycord-uploads:

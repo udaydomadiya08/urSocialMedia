@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0c10">
+  <meta name="description" content="insaygram — A visual world, on your terms.">
+  <title>insaygram — Visual Social Platform</title>
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Left Navigation Sidebar -->
+    <aside class="sidebar">
+      <a class="brand" href="#home" id="brandLogo">
+        <div class="brand-mark">✳</div>
+        <span>insaygram</span>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <button class="nav-btn active" data-view="feed"><span class="nav-icon">⌂</span><span>Home</span></button>
+        <button class="nav-btn" data-view="explore"><span class="nav-icon">⌕</span><span>Explore</span></button>
+        <button class="nav-btn" data-view="reels"><span class="nav-icon">▦</span><span>Reels</span></button>
+        <button class="nav-btn" data-view="messages"><span class="nav-icon">✉</span><span>Messages</span><span class="badge" id="unreadBadge" style="display:none">0</span></button>
+        <button class="nav-btn" data-view="profile"><span class="nav-icon">◉</span><span>Profile</span></button>
+        <button class="nav-btn" id="navCreateBtn"><span class="nav-icon">＋</span><span>Create</span></button>
+      </nav>
+
+      <div class="sidebar-user" id="sidebarUser">
+        <img class="story-avatar" id="sidebarAvatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><circle cx='20' cy='20' r='20' fill='%23555'/></svg>" alt="User">
+        <div class="user-info">
+          <b id="sidebarUsername">Guest Explorer</b>
+          <small id="sidebarTagline">Sign in to share</small>
+        </div>
+        <button id="authTriggerBtn" class="btn-outline" style="padding:4px 8px;font-size:11px">Sign In</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-stage">
+      <header class="topbar">
+        <div class="search-bar">
+          <span>⌕</span>
+          <input type="text" id="globalSearch" placeholder="Search creators, captions, tags...">
+        </div>
+        <div class="top-actions">
+          <button class="btn-primary" id="topCreateBtn">＋ New Post</button>
+          <button class="btn-outline" id="newStoryBtn">＋ Story</button>
+        </div>
+      </header>
+
+      <!-- VIEW 1: HOME FEED -->
+      <section id="viewFeed">
+        <!-- Stories Horizontal Carousel -->
+        <div class="stories-tray" id="storiesTray">
+          <div class="story-item" id="addStoryTrigger">
+            <div class="story-ring viewed">
+              <img class="story-avatar" id="myStoryAvatar" src="" alt="My Story">
+              <span class="story-plus">＋</span>
+            </div>
+            <span class="story-name">Your story</span>
+          </div>
+          <!-- Dynamic friend stories -->
+          <div id="dynamicStories" style="display:contents"></div>
+        </div>
+
+        <!-- Feed Layout with Right Rail -->
+        <div class="feed-layout">
+          <div class="feed-stream" id="feedStream">
+            <div style="text-align:center;padding:40px;color:var(--muted)">Loading visual feed...</div>
+          </div>
+
+          <aside class="right-rail">
+            <div class="rail-card">
+              <div class="rail-header">
+                <span>Featured Creators</span>
+                <span>✦</span>
+              </div>
+              <div id="suggestedUsers"></div>
+            </div>
+
+            <div class="rail-card">
+              <div class="rail-header">Trending Aesthetic Tags</div>
+              <p style="font-size:12px;color:var(--muted);line-height:1.6">
+                #KyotoArchitecture<br>
+                #GoldenHourStudies<br>
+                #CeramicsAndClay<br>
+                #AnalogFilmExposure
+              </p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- VIEW 2: EXPLORE -->
+      <section id="viewExplore" style="display:none">
+        <h2 style="font:800 24px 'Plus Jakarta Sans';margin-bottom:18px">Explore & Discovery</h2>
+        <div class="explore-grid" id="exploreGrid"></div>
+      </section>
+
+      <!-- VIEW 3: REELS -->
+      <section id="viewReels" style="display:none">
+        <div class="reels-container" id="reelsContainer"></div>
+      </section>
+
+      <!-- VIEW 4: MESSAGES -->
+      <section id="viewMessages" style="display:none">
+        <h2 style="font:800 24px 'Plus Jakarta Sans';margin-bottom:18px">Direct Messages</h2>
+        <div style="display:grid;grid-template-columns:280px 1fr;gap:20px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);height:580px;overflow:hidden">
+          <div style="border-right:1px solid var(--line);padding:14px;overflow-y:auto" id="conversationsList"></div>
+          <div style="display:flex;flex-direction:column;height:100%" id="activeChatPane">
+            <div style="padding:14px 20px;border-bottom:1px solid var(--line);font-weight:700" id="chatHeader">Select a conversation</div>
+            <div style="flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:10px" id="chatMessages"></div>
+            <form id="chatForm" style="display:none;padding:12px 20px;border-top:1px solid var(--line);gap:10px">
+              <input type="text" id="chatInput" placeholder="Message..." class="form-input" style="flex:1" required>
+              <button type="submit" class="btn-primary">Send</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 5: USER PROFILE -->
+      <section id="viewProfile" style="display:none">
+        <div class="profile-header">
+          <img class="profile-avatar-lg" id="profileHeaderAvatar" src="" alt="Profile">
+          <div class="profile-details">
+            <div class="profile-title-row">
+              <h2 class="profile-username" id="profileHeaderUsername"></h2>
+              <button class="btn-outline" id="editProfileBtn">Edit Profile</button>
+              <button class="btn-outline" id="logoutBtn" style="color:#f43f5e">Log Out</button>
+            </div>
+            <div class="profile-stats">
+              <span><b id="statPosts">0</b> posts</span>
+              <span><b id="statFollowers">0</b> followers</span>
+              <span><b id="statFollowing">0</b> following</span>
+            </div>
+            <div style="font-weight:700;font-size:15px;margin-bottom:4px" id="profileHeaderDisplayName"></div>
+            <p style="color:#b3b6c4;font-size:14px;max-width:500px" id="profileHeaderBio"></p>
+          </div>
+        </div>
+        <div class="explore-grid" id="profileGrid"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODALS -->
+
+  <!-- 1. Post Compose Dialog -->
+  <dialog id="createPostDialog">
+    <form id="createPostForm">
+      <div class="dialog-header">
+        <h3>Create New Post</h3>
+        <button type="button" class="btn-outline close-dialog">×</button>
+      </div>
+      <div class="form-group">
+        <label>Media File (Image or Video)</label>
+        <input type="file" id="postFileInput" accept="image/*,video/*" class="form-input">
+        <div id="uploadPreview" style="margin-top:8px;max-height:200px;overflow:hidden;border-radius:8px"></div>
+      </div>
+      <div class="form-group">
+        <label>Caption</label>
+        <textarea id="postCaptionInput" rows="3" class="form-input" placeholder="Write a thoughtful caption..." maxlength="2200"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Location Tag</label>
+        <input type="text" id="postLocationInput" class="form-input" placeholder="e.g. Kyoto, Japan">
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+        <button type="button" class="btn-outline close-dialog">Cancel</button>
+        <button type="submit" class="btn-primary" id="publishPostBtn">Publish</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 2. Story Creation Dialog -->
+  <dialog id="createStoryDialog">
+    <form id="createStoryForm">
+      <div class="dialog-header">
+        <h3>Add to Your Story (24h Expiration)</h3>
+        <button type="button" class="btn-outline close-dialog">×</button>
+      </div>
+      <div class="form-group">
+        <label>Story Image / Clip</label>
+        <input type="file" id="storyFileInput" accept="image/*,video/*" class="form-input" required>
+      </div>
+      <div class="form-group">
+        <label>Story Caption</label>
+        <input type="text" id="storyCaptionInput" class="form-input" placeholder="Add a moment note...">
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+        <button type="button" class="btn-outline close-dialog">Cancel</button>
+        <button type="submit" class="btn-primary">Share Story</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 3. Full-Screen Story Viewer Modal -->
+  <dialog id="storyViewerDialog" class="story-viewer-dialog">
+    <div class="story-viewer-stage">
+      <div class="story-progress-bar">
+        <div class="story-progress-fill" id="storyProgressFill"></div>
+      </div>
+      <div style="position:absolute;top:24px;left:18px;display:flex;align-items:center;gap:10px;z-index:5">
+        <img id="viewerUserAvatar" class="story-avatar" style="width:34px;height:34px" src="" alt="">
+        <div>
+          <b id="viewerUsername" style="font-size:13px;color:#fff"></b>
+          <small id="viewerTime" style="display:block;font-size:11px;color:rgba(255,255,255,0.7)"></small>
+        </div>
+      </div>
+      <button class="btn-outline close-dialog" style="position:absolute;top:20px;right:18px;z-index:5;color:white;font-size:22px;border:0;background:none">×</button>
+      <div id="storyViewerMedia" style="width:100%;height:100%;display:grid;place-items:center"></div>
+      <div id="storyViewerCaption" style="position:absolute;bottom:24px;left:20px;right:20px;color:white;font-size:14px;background:rgba(0,0,0,0.5);padding:10px 14px;border-radius:8px"></div>
+    </div>
+  </dialog>
+
+  <!-- 4. Authentication Modal -->
+  <dialog id="authDialog">
+    <div class="dialog-header">
+      <h3 id="authTitle">Sign In to insaygram</h3>
+      <button type="button" class="btn-outline close-dialog">×</button>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:18px">
+      <button type="button" class="btn-outline" id="tabLogin" style="flex:1;background:var(--panel2)">Login</button>
+      <button type="button" class="btn-outline" id="tabRegister" style="flex:1">Register</button>
+    </div>
+    <form id="authForm">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="authUsername" class="form-input" required placeholder="e.g. mirachen">
+      </div>
+      <div class="form-group" id="groupEmail" style="display:none">
+        <label>Email Address</label>
+        <input type="email" id="authEmail" class="form-input" placeholder="e.g. mira@example.com">
+      </div>
+      <div class="form-group" id="groupDisplayName" style="display:none">
+        <label>Display Name</label>
+        <input type="text" id="authDisplayName" class="form-input" placeholder="e.g. Mira Chen">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="authPassword" class="form-input" required placeholder="••••••••">
+      </div>
+      <div id="authError" style="color:#f43f5e;font-size:12px;margin-bottom:12px;display:none"></div>
+      <button type="submit" class="btn-primary" style="width:100%;justify-content:center" id="authSubmitBtn">Continue</button>
+    </form>
+  </dialog>
+
+  <!-- 5. Edit Profile Modal -->
+  <dialog id="editProfileDialog">
+    <form id="editProfileForm">
+      <div class="dialog-header">
+        <h3>Edit Profile</h3>
+        <button type="button" class="btn-outline close-dialog">×</button>
+      </div>
+      <div class="form-group">
+        <label>Display Name</label>
+        <input type="text" id="editDisplayName" class="form-input" required>
+      </div>
+      <div class="form-group">
+        <label>Bio</label>
+        <textarea id="editBio" rows="3" class="form-input" maxlength="250"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Avatar Photo</label>
+        <input type="file" id="editAvatarFile" accept="image/*" class="form-input">
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+        <button type="button" class="btn-outline close-dialog">Cancel</button>
+        <button type="submit" class="btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast-msg" id="toastMsg"></div>
+
+  <script src="src/app.js"></script>
+</body>
+</html>

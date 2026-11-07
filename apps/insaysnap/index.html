@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090a0f">
+  <meta name="description" content="insaysnap — Real moments. Shared in a flash. Ephemeral camera-first communication.">
+  <title>insaysnap — Ephemeral Camera Platform</title>
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Left Navigation Sidebar -->
+    <aside class="sidebar">
+      <a class="brand" href="#camera" id="brandLogo">
+        <div class="brand-mark">⚡</div>
+        <span>insaysnap</span>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <button class="nav-btn active" data-view="camera"><span class="nav-icon">📷</span><span>Camera</span></button>
+        <button class="nav-btn" data-view="inbox"><span class="nav-icon">📬</span><span>Snaps</span><span class="badge" id="unopenedBadge" style="display:none">0</span></button>
+        <button class="nav-btn" data-view="stories"><span class="nav-icon">✨</span><span>Stories</span></button>
+        <button class="nav-btn" data-view="memories"><span class="nav-icon">💾</span><span>Memories</span></button>
+        <button class="nav-btn" data-view="friends"><span class="nav-icon">👥</span><span>Friends</span></button>
+      </nav>
+
+      <div class="sidebar-user" id="sidebarUser">
+        <img class="user-avatar-sm" id="sidebarAvatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='38' height='38'><circle cx='19' cy='19' r='19' fill='%23fffc00'/></svg>" alt="">
+        <div style="flex:1;min-width:0">
+          <b id="sidebarUsername" style="font-size:13px;display:block">Guest</b>
+          <span class="streak-badge">⚡ <span id="sidebarScore">0</span> pts</span>
+        </div>
+        <button id="authBtn" class="btn-outline" style="padding:4px 8px;font-size:11px">Sign In</button>
+      </div>
+    </aside>
+
+    <!-- Main Stage -->
+    <main class="main-stage">
+      <!-- VIEW 1: CAMERA (DEFAULT) -->
+      <section id="viewCamera">
+        <div class="camera-container" id="cameraBox">
+          <video id="cameraVideo" autoplay playsinline muted></video>
+          <canvas id="captureCanvas" style="display:none"></canvas>
+
+          <!-- Fallback Upload Element for Non-Webcam Devices -->
+          <input type="file" id="mediaUploadFallback" accept="image/*,video/*" style="display:none">
+
+          <!-- Overlaid Controls -->
+          <div class="camera-controls-overlay">
+            <div class="camera-top-bar">
+              <button class="timer-pill" id="timerToggleBtn">⏱ <span id="timerVal">5</span>s</button>
+              <button class="timer-pill" id="flipCameraBtn">🔄 Switch</button>
+              <button class="timer-pill" id="fallbackTriggerBtn">📁 Upload</button>
+            </div>
+
+            <!-- Filter Selection Strip -->
+            <div class="filter-bar">
+              <button class="filter-chip active" data-filter="none">Normal</button>
+              <button class="filter-chip" data-filter="sepia(0.8)">Sepia</button>
+              <button class="filter-chip" data-filter="contrast(1.4) saturate(1.5)">Vivid</button>
+              <button class="filter-chip" data-filter="grayscale(1)">Mono</button>
+              <button class="filter-chip" data-filter="hue-rotate(90deg) brightness(1.2)">Cyber</button>
+            </div>
+
+            <!-- Bottom Shutter Bar -->
+            <div class="camera-bottom-bar">
+              <button class="shutter-btn" id="shutterBtn" title="Tap to capture">
+                <div class="shutter-inner"></div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Captured Media Review Overlay (Shown after capture) -->
+          <div id="capturedPreviewOverlay" style="display:none;position:absolute;inset:0;background:#000;z-index:15">
+            <img id="capturedImage" style="width:100%;height:100%;object-fit:cover" alt="">
+            <input type="text" id="snapCaptionInput" class="caption-input-overlay" placeholder="Add a quick note...">
+            <div class="preview-actions">
+              <button class="btn-outline" id="retakeBtn">✕ Discard</button>
+              <div style="display:flex;gap:10px">
+                <button class="btn-outline" id="saveMemoryBtn">💾 Save to Memories</button>
+                <button class="btn-primary" id="openSendDrawerBtn">Send To ▸</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 2: SNAPS INBOX -->
+      <section id="viewInbox" style="display:none">
+        <h2 style="font:800 24px 'Plus Jakarta Sans';margin-bottom:18px">Received Snaps (Ephemeral)</h2>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:18px">
+          Snaps disappear and are permanently erased from the server immediately after viewing.
+        </p>
+        <div class="inbox-list" id="inboxList"></div>
+      </section>
+
+      <!-- VIEW 3: STORIES -->
+      <section id="viewStories" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+          <h2 style="font:800 24px 'Plus Jakarta Sans'">Friend Stories (24h)</h2>
+          <button class="btn-primary" id="storyFromCameraBtn">＋ My Story</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));gap:20px" id="storiesList"></div>
+      </section>
+
+      <!-- VIEW 4: MEMORIES VAULT -->
+      <section id="viewMemories" style="display:none">
+        <h2 style="font:800 24px 'Plus Jakarta Sans';margin-bottom:18px">Your Private Memories Vault</h2>
+        <div class="memories-grid" id="memoriesGrid"></div>
+      </section>
+
+      <!-- VIEW 5: FRIENDS & STREAKS -->
+      <section id="viewFriends" style="display:none">
+        <h2 style="font:800 24px 'Plus Jakarta Sans';margin-bottom:18px">Friends & Snap Streaks</h2>
+        <div style="display:flex;flex-direction:column;gap:12px" id="friendsList"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODALS -->
+
+  <!-- 1. Send To Recipient Dialog -->
+  <dialog id="sendRecipientDialog">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3>Send Snap</h3>
+      <button class="btn-outline close-dialog">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">
+      <div style="padding:10px;background:var(--panel2);border-radius:10px;display:flex;justify-content:space-between;align-items:center">
+        <b>Add to My 24h Story</b>
+        <button class="btn-primary" id="sendToStoryBtn" style="padding:6px 12px;font-size:12px">Post</button>
+      </div>
+      <label style="font-size:12px;color:var(--muted);font-weight:700">SEND DIRECT TO FRIEND:</label>
+      <div id="recipientFriendsList" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+  </dialog>
+
+  <!-- 2. Fullscreen Countdown Snap Viewer -->
+  <dialog id="snapViewerDialog" class="snap-viewer-dialog">
+    <div class="viewer-stage">
+      <div class="countdown-circle" id="countdownCircle">5</div>
+      <img id="viewerImage" style="width:100%;height:100%;object-fit:contain" alt="">
+      <div id="viewerCaption" style="position:absolute;bottom:30px;background:rgba(0,0,0,0.7);padding:10px 18px;border-radius:20px;font-size:16px;font-weight:700"></div>
+    </div>
+  </dialog>
+
+  <!-- 3. Auth Dialog -->
+  <dialog id="authDialog">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 id="authTitle">Sign In to insaysnap</h3>
+      <button class="btn-outline close-dialog">✕</button>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:18px">
+      <button type="button" class="btn-outline" id="tabLogin" style="flex:1;background:var(--panel2)">Login</button>
+      <button type="button" class="btn-outline" id="tabRegister" style="flex:1">Register</button>
+    </div>
+    <form id="authForm">
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
+        <label style="font-size:12px;color:var(--muted)">Username</label>
+        <input type="text" id="authUsername" class="form-input" required placeholder="kai_runner">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;display:none" id="groupEmail">
+        <label style="font-size:12px;color:var(--muted)">Email</label>
+        <input type="email" id="authEmail" class="form-input" placeholder="kai@example.com">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;display:none" id="groupDisplayName">
+        <label style="font-size:12px;color:var(--muted)">Display Name</label>
+        <input type="text" id="authDisplayName" class="form-input" placeholder="Kai Vance">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px">
+        <label style="font-size:12px;color:var(--muted)">Password</label>
+        <input type="password" id="authPassword" class="form-input" required placeholder="••••••••">
+      </div>
+      <div id="authError" style="color:#f43f5e;font-size:12px;margin-bottom:12px;display:none"></div>
+      <button type="submit" class="btn-primary" style="width:100%;justify-content:center">Continue</button>
+    </form>
+  </dialog>
+
+  <div class="toast-msg" id="toastMsg"></div>
+
+  <script src="src/app.js"></script>
+</body>
+</html>

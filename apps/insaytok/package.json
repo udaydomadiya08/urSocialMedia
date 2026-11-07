@@ -1,0 +1,14 @@
+{
+  "name": "insaytok",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Short-form video entertainment platform with transparent, explainable multi-factor algorithmic recommendation, snap vertical feed, and creator profiles.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/run_tests.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
